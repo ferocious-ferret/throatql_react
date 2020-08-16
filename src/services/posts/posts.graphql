@@ -1,0 +1,97 @@
+fragment PostSummary on PostPage {
+  edges {
+    node {
+      title
+      id
+      posted
+      thumbnail
+      link
+      score
+      commentCount
+      author {
+        name
+      }
+      sub {
+        name
+      }
+    }
+  }
+  pageInfo {
+    hasNextPage
+    endCursor
+  }
+}
+
+query getHomePosts($count: Int, $after: String) {
+  getHomePosts(count: $count, after: $after) {
+    ...PostSummary
+  }
+}
+
+query getPostContent($id: ID!) {
+  getPost(id: $id) {
+    content
+  }
+}
+
+fragment Comment on Comment {
+  id
+  content
+  lastEdit
+  author {
+    name
+  }
+  upVotes
+  downVotes
+  time
+}
+
+query getPost($id: ID!) {
+  getPost(id: $id) {
+    content
+    upVotes
+    downVotes
+    link
+    posted
+    edited
+    thumbnail
+    title
+    flair
+    author {
+      name
+    }
+  }
+}
+
+query getCommentsForPost($id: ID!) {
+  getPost(id: $id) {
+    comments {
+      edges {
+        node {
+          ...Comment
+          children(limit: 10) {
+            edges {
+              node {
+                ...Comment
+                children(limit: 5) {
+                  edges {
+                    node {
+                      ...Comment
+                      children(limit: 2) {
+                        edges {
+                          node {
+                            ...Comment
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

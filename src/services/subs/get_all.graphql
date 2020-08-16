@@ -1,0 +1,34 @@
+query getSubs ($count: Int, $after: String) {
+  getSubs(count: $count, after: $after) {
+    pageInfo {
+      hasNextPage,
+      endCursor
+    },
+    edges {
+      node {
+        title,
+        name,
+        creation
+      }
+    }
+  }
+}
+
+query getSub ($name: String!, $count: Int, $after: String) {
+  getSub(name: $name) {
+    posts(count: $count, after: $after) {
+      ...PostSummary
+    }
+  }
+}
+
+query getSubSidebar($name: String!) {
+  getSub(name: $name) {
+    mods {
+      name
+    },
+    sidebar,
+    creation,
+    subscribers
+  }
+}
